@@ -1,80 +1,59 @@
 "use client";
 
-import Link from "next/link";
 import Image from "next/image";
-import { useContext } from "react";
-import { FitLogContext } from "../../context/FitLogContext";
 import heroImage from "@/src/assets/banner.png";
 
 const Hero = () => {
-  const { plan, saved } = useContext(FitLogContext);
-
   return (
-    <section className="bg-black text-white">
-      <div className="mx-auto grid max-w-7xl items-center gap-10 px-4 py-16 md:py-20 lg:grid-cols-2 lg:py-24">
-        {/* Content */}
-        <div>
-          <p className="text-sm font-bold tracking-[0.25em] text-[#ccff00]">
-            WORKOUT LIBRARY
-          </p>
+    <section className="bg-[#08080a] py-6 sm:py-8">
+      {/* Outer Container matching website max-width */}
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        {/* Main Dark Banner Card */}
+        <div className="relative overflow-hidden rounded-3xl bg-[#12141a] px-8 py-12 sm:px-12 sm:py-16 lg:px-16 lg:py-20">
+          <div className="grid items-center gap-8 lg:grid-cols-12">
+            {/* Left Text Content */}
+            <div className="relative z-10 lg:col-span-7">
+              {/* Category Label */}
+              <p className="text-xs font-bold tracking-[0.2em] text-[#ccff00]">
+                WORKOUT LIBRARY
+              </p>
 
-          <h1 className="mt-5 max-w-3xl text-5xl font-black leading-[0.95] tracking-tight sm:text-6xl lg:text-7xl">
-            TRAIN WITH INTENT.
-            <br />
-            LOG EVERY SET.
-          </h1>
+              {/* Main Heading */}
+              <h1 className="mt-4 text-4xl font-black uppercase leading-[1.05] tracking-tight text-white sm:text-6xl lg:text-7xl">
+                TRAIN WITH INTENT. LOG EVERY SET.
+              </h1>
 
-          <p className="mt-6 max-w-xl text-base leading-7 text-gray-400 sm:text-lg">
-            Build a focused workout routine with exercises designed to help you
-            train consistently, track your progress, and stay accountable.
-          </p>
+              {/* Subtitle Description */}
+              <p className="mt-6 max-w-lg text-sm leading-relaxed text-zinc-400 sm:text-base">
+                FitLog is a dark, no-nonsense gym companion: pick a lift, lock
+                it into today&apos;s plan, and watch the week&apos;s work add
+                up.
+              </p>
 
-          {/* CTA */}
-          <div className="mt-8 flex flex-wrap items-center gap-3">
-            <a
-              href="#library"
-              className="inline-flex items-center gap-2 rounded-xl bg-[#ccff00] px-6 py-3 text-sm font-black text-black transition hover:bg-white"
-            >
-              BROWSE WORKOUTS
-              <span>↓</span>
-            </a>
+              {/* Single CTA Button */}
+              <div className="mt-8">
+                <a
+                  href="#library"
+                  className="inline-block rounded-xl bg-[#ccff00] px-7 py-3.5 text-xs font-black uppercase tracking-wider text-black transition-all duration-300 hover:bg-white hover:scale-105"
+                >
+                  BROWSE WORKOUTS
+                </a>
+              </div>
+            </div>
 
-            <Link
-              href="/my-plan"
-              className="rounded-xl border border-white/30 px-6 py-3 text-sm font-bold transition hover:bg-white hover:text-black"
-            >
-              MY PLAN
-            </Link>
+            {/* Right Transparent Model Image */}
+            <div className="relative z-10 flex justify-center lg:col-span-5 lg:justify-end">
+              <div className="relative h-64 w-full max-w-md sm:h-80 lg:h-[380px]">
+                <Image
+                  src={heroImage}
+                  alt="FitLog Workout Model"
+                  priority
+                  fill
+                  className="object-contain"
+                />
+              </div>
+            </div>
           </div>
-
-          {/* Counters */}
-          <div className="mt-10 flex flex-wrap gap-3">
-            <Link
-              href="/my-plan"
-              className="rounded-full bg-[#ccff00] px-4 py-2 text-sm font-bold text-black transition hover:bg-white"
-            >
-              Plan {plan.length}
-            </Link>
-
-            <Link
-              href="/my-plan"
-              className="rounded-full border border-white/30 px-4 py-2 text-sm font-bold text-white transition hover:border-white"
-            >
-              Saved {saved.length}
-            </Link>
-          </div>
-        </div>
-
-        {/* Image */}
-        <div className="relative overflow-hidden rounded-3xl">
-          <Image
-            src={heroImage}
-            alt="Workout training"
-            className="h-[400px] w-full object-cover sm:h-[500px]"
-            priority
-          />
-
-          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
         </div>
       </div>
     </section>

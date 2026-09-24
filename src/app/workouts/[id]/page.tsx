@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation";
 import { Workout } from "@/src/components/types/workout";
 import WorkoutDetails from "@/src/components/shared/workout/WorkoutDetails";
-import WorkoutActions from "@/src/components/shared/workout/WorkoutActions";
 
 const WorkoutDetailsPage = async ({
   params,
@@ -10,7 +9,12 @@ const WorkoutDetailsPage = async ({
 }) => {
   const { id } = await params;
 
-  const response = await fetch(`https://api.abcz.workers.dev/api/fitlog/${id}`);
+  const response = await fetch(
+    `https://api.abcz.workers.dev/api/fitlog/${id}`,
+    {
+      cache: "no-store",
+    },
+  );
 
   if (!response.ok) {
     notFound();
@@ -19,10 +23,10 @@ const WorkoutDetailsPage = async ({
   const workout: Workout = await response.json();
 
   return (
-    <main className="mx-auto w-full max-w-7xl px-4 py-10">
-      <WorkoutDetails workout={workout} />
-
-      <WorkoutActions workout={workout} />
+    <main className="min-h-screen bg-[#08080a] text-white py-10 sm:py-16">
+      <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+        <WorkoutDetails workout={workout} />
+      </div>
     </main>
   );
 };

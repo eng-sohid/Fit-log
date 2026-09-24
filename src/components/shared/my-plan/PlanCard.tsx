@@ -1,10 +1,12 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useContext } from "react";
 import { toast } from "react-toastify";
 import { Workout } from "../../types/workout";
-import { FitLogContext } from "../../context/FitLogContext";
+import { FitLogContext } from "@/src/components/context/FitLogContext";
+import { Clock, Flame, Star, X } from "lucide-react";
 
 interface PlanCardProps {
   workout: Workout;
@@ -32,64 +34,67 @@ const PlanCard = ({ workout, isSaved = false }: PlanCardProps) => {
   };
 
   return (
-    <div className="group relative overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg">
-      {/* Remove Button */}
+    <div className="group relative overflow-hidden rounded-2xl border border-white/5 bg-[#12141a] transition duration-300 hover:border-white/20">
+      {/* Delete/Remove Icon */}
       <button
         onClick={handleRemove}
-        className="absolute right-3 top-3 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-white text-lg font-bold text-gray-700 shadow-md transition hover:bg-black hover:text-white"
+        className="absolute right-3 top-3 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-black/60 text-zinc-400 backdrop-blur-md transition hover:bg-red-500 hover:text-white"
         aria-label="Remove workout"
       >
-        ×
+        <X className="h-4 w-4" />
       </button>
 
       {/* Image */}
-      <div className="overflow-hidden">
-        <img
+      <div className="relative h-48 w-full overflow-hidden">
+        <Image
           src={workout.image}
           alt={workout.name}
-          className="h-52 w-full object-cover transition duration-500 group-hover:scale-105"
+          fill
+          className="object-cover transition duration-500 group-hover:scale-105"
         />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#12141a] via-transparent to-transparent opacity-80" />
       </div>
 
-      {/* Content */}
-      <div className="p-5">
-        <h2 className="text-xl font-bold tracking-tight">{workout.name}</h2>
+      {/* Body Content */}
+      <div className="p-4 pt-2">
+        <h2 className="text-base font-black uppercase tracking-tight text-white">
+          {workout.name}
+        </h2>
+        <p className="mt-0.5 text-xs text-zinc-500">{workout.equipment}</p>
 
-        <p className="mt-2 text-sm text-gray-500">{workout.equipment}</p>
-
-        {/* Stats */}
-        <div className="mt-5 grid grid-cols-3 gap-2">
-          <div className="rounded-xl bg-gray-50 p-3 text-center">
-            <p className="text-xs text-gray-500">Duration</p>
-            <p className="mt-1 text-sm font-bold">{workout.duration} min</p>
+        {/* Stats Inline */}
+        <div className="mt-4 flex items-center justify-between text-xs text-zinc-400">
+          <div className="flex items-center gap-1">
+            <Clock className="h-3.5 w-3.5 text-zinc-500" />
+            <span>{workout.duration} min</span>
           </div>
 
-          <div className="rounded-xl bg-gray-50 p-3 text-center">
-            <p className="text-xs text-gray-500">Calories</p>
-            <p className="mt-1 text-sm font-bold">{workout.caloriesBurned}</p>
+          <div className="flex items-center gap-1">
+            <Flame className="h-3.5 w-3.5 text-zinc-500" />
+            <span>{workout.caloriesBurned} kcal</span>
           </div>
 
-          <div className="rounded-xl bg-gray-50 p-3 text-center">
-            <p className="text-xs text-gray-500">Rating</p>
-            <p className="mt-1 text-sm font-bold">⭐ {workout.rating}</p>
+          <div className="flex items-center gap-1">
+            <Star className="h-3.5 w-3.5 fill-[#ccff00] text-[#ccff00]" />
+            <span className="font-bold text-white">{workout.rating}</span>
           </div>
         </div>
 
-        {/* Buttons */}
+        {/* Action Buttons */}
         <div className="mt-5 flex gap-2">
           <Link
             href={`/workouts/${workout.id}`}
-            className="flex-1 rounded-xl border border-black px-3 py-3 text-center text-sm font-semibold transition hover:bg-black hover:text-white"
+            className="flex-1 rounded-xl border border-white/10 bg-transparent py-2.5 text-center text-xs font-bold uppercase tracking-wider text-white transition hover:bg-white/10"
           >
-            View Details
+            Details
           </Link>
 
           {!isSaved && (
             <button
               onClick={handleDone}
-              className="flex-1 rounded-xl bg-[#ccff00] px-3 py-3 text-sm font-bold text-black transition hover:bg-black hover:text-white"
+              className="flex-1 rounded-xl bg-[#ccff00] py-2.5 text-xs font-black uppercase tracking-wider text-black transition hover:bg-white"
             >
-              Mark as Done
+              Done
             </button>
           )}
         </div>
