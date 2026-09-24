@@ -7,9 +7,12 @@ interface WorkoutLibraryProps {
 
 const WorkoutLibrary = ({ workouts }: WorkoutLibraryProps) => {
   return (
-    <section id="library">
-      <h2>THE LIBRARY</h2>
-      <p>Twelve lifts covering every major muscle group.</p>
+    <section id="library" className="mx-auto w-full max-w-7xl px-4 py-16">
+      <h2 className="text-3xl font-bold">THE LIBRARY</h2>
+
+      <p className="mt-2 text-gray-500">
+        Twelve lifts covering every major muscle group.
+      </p>
 
       <div>
         {workouts.map((workout) => (
