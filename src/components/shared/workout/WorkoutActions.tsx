@@ -20,34 +20,26 @@ export default function WorkoutActions({ workout }: WorkoutActionsProps) {
   const isSaved = saved.some((item) => item.id === workout.id);
 
   const handleAddToPlan = () => {
-    if (isPlanned) {
-      alert("Already added to today's plan!");
-      return;
-    }
-    if (plan.length >= 5) {
-      alert("You can only add up to 5 lifts for today!");
+    if (isPlanned || plan.length >= 5) {
       return;
     }
     addToPlan(workout);
-    alert("Added to today's plan!");
   };
 
   const handleSaveWorkout = () => {
     if (isSaved) {
-      alert("Already saved for later!");
       return;
     }
     saveWorkout(workout);
-    alert("Saved for later!");
   };
 
   return (
     <div className="flex flex-col gap-3 sm:flex-row w-full pb-6">
       <button
         onClick={handleAddToPlan}
-        disabled={isPlanned}
+        disabled={isPlanned || plan.length >= 5}
         className={`flex w-full items-center justify-center gap-2 rounded-xl px-5 py-3.5 text-xs font-black uppercase tracking-wider transition-all ${
-          isPlanned
+          isPlanned || plan.length >= 5
             ? "bg-zinc-800 text-zinc-500 cursor-not-allowed"
             : "bg-[#ccff00] text-black hover:bg-white active:scale-95"
         }`}
@@ -66,7 +58,11 @@ export default function WorkoutActions({ workout }: WorkoutActionsProps) {
             d="M12 4v16m8-8H4"
           />
         </svg>
-        {isPlanned ? "Added to Plan" : "Add to today's plan"}
+        {isPlanned
+          ? "Added to Plan"
+          : plan.length >= 5
+            ? "Plan Limit Reached (Max 5)"
+            : "Add to today's plan"}
       </button>
 
       <button
