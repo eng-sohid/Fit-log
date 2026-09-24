@@ -1,6 +1,7 @@
 "use client";
 
 import { useContext } from "react";
+import { toast } from "react-toastify";
 import { FitLogContext } from "@/src/components/context/FitLogContext";
 import { Workout } from "../../types/workout";
 
@@ -19,25 +20,39 @@ export default function WorkoutActions({ workout }: WorkoutActionsProps) {
   const isPlanned = plan.some((item) => item.id === workout.id);
   const isSaved = saved.some((item) => item.id === workout.id);
 
-  const handleAddToPlan = () => {
-    if (isPlanned || plan.length >= 5) {
+  const handleAddToPlan = (e: React.MouseEvent) => {
+    e.stopPropagation();
+
+    if (isPlanned) {
+      toast.error("Already added to today's plan!");
       return;
     }
+    if (plan.length >= 5) {
+      toast.error("You can only add up to 5 lifts for today!");
+      return;
+    }
+
     addToPlan(workout);
+    toast.success("Added to today's plan!");
   };
 
-  const handleSaveWorkout = () => {
+  const handleSaveWorkout = (e: React.MouseEvent) => {
+    e.stopPropagation();
+
     if (isSaved) {
+      toast.error("Already saved for later!");
       return;
     }
+
     saveWorkout(workout);
+    toast.success("Saved for later!");
   };
 
   return (
     <div className="flex flex-col gap-3 sm:flex-row w-full pb-6">
       <button
         onClick={handleAddToPlan}
-        disabled={isPlanned || plan.length >= 5}
+        type="button"
         className={`flex w-full items-center justify-center gap-2 rounded-xl px-5 py-3.5 text-xs font-black uppercase tracking-wider transition-all ${
           isPlanned || plan.length >= 5
             ? "bg-zinc-800 text-zinc-500 cursor-not-allowed"
@@ -67,7 +82,7 @@ export default function WorkoutActions({ workout }: WorkoutActionsProps) {
 
       <button
         onClick={handleSaveWorkout}
-        disabled={isSaved}
+        type="button"
         className={`flex w-full items-center justify-center gap-2 rounded-xl border px-5 py-3.5 text-xs font-black uppercase tracking-wider transition-all ${
           isSaved
             ? "border-zinc-800 bg-zinc-900/50 text-zinc-500 cursor-not-allowed"
