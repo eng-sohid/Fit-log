@@ -45,7 +45,7 @@ const Navbar = () => {
           </Link>
 
           <Link
-            href="/my-plan"
+            href="/my-plan?tab=plan"
             className={`rounded-full px-4 py-1 text-xs font-bold transition-all duration-200 ${
               isPlanActive
                 ? "bg-[#ccff00] text-black"
@@ -59,7 +59,7 @@ const Navbar = () => {
         {/* Right Counter Stats */}
         <div className="flex items-center gap-4 text-xs font-medium text-zinc-400">
           <Link
-            href="/my-plan"
+            href="/my-plan?tab=plan"
             className="flex items-center gap-1.5 hover:text-white transition"
           >
             <span>Plan</span>
@@ -69,7 +69,7 @@ const Navbar = () => {
           </Link>
 
           <Link
-            href="/my-plan"
+            href="/my-plan?tab=saved"
             className="flex items-center gap-1.5 hover:text-white transition"
           >
             <span>Saved</span>

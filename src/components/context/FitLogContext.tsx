@@ -6,6 +6,8 @@ import { Workout } from "../types/workout";
 interface FitLogContextType {
   plan: Workout[];
   saved: Workout[];
+  activeTab: "plan" | "saved";
+  setActiveTab: (tab: "plan" | "saved") => void;
   addToPlan: (workout: Workout) => void;
   saveWorkout: (workout: Workout) => void;
   removeFromPlan: (id: number) => void;
@@ -16,6 +18,8 @@ interface FitLogContextType {
 export const FitLogContext = createContext<FitLogContextType>({
   plan: [],
   saved: [],
+  activeTab: "plan",
+  setActiveTab: () => {},
   addToPlan: () => {},
   saveWorkout: () => {},
   removeFromPlan: () => {},
@@ -30,6 +34,7 @@ interface FitLogProviderProps {
 const FitLogProvider = ({ children }: FitLogProviderProps) => {
   const [plan, setPlan] = useState<Workout[]>([]);
   const [saved, setSaved] = useState<Workout[]>([]);
+  const [activeTab, setActiveTab] = useState<"plan" | "saved">("plan");
 
   const addToPlan = (workout: Workout) => {
     setPlan((prev) => {
@@ -72,6 +77,8 @@ const FitLogProvider = ({ children }: FitLogProviderProps) => {
       value={{
         plan,
         saved,
+        activeTab,
+        setActiveTab,
         addToPlan,
         saveWorkout,
         removeFromPlan,

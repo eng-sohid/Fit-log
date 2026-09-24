@@ -1,15 +1,29 @@
 "use client";
 
 import Link from "next/link";
-import { useContext, useState } from "react";
+import { useContext, useState, Suspense } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import { FitLogContext } from "@/src/components/context/FitLogContext";
 import PlanStats from "@/src/components/shared/my-plan/PlanStats";
 import PlanTabs from "@/src/components/shared/my-plan/PlanTabs";
 import PlanCard from "@/src/components/shared/my-plan/PlanCard";
 
-const MyPlanPage = () => {
+function MyPlanContent() {
   const { plan = [], saved = [] } = useContext(FitLogContext);
-  const [activeTab, setActiveTab] = useState<"plan" | "saved">("plan");
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  const tabParam = searchParams.get("tab");
+
+  const activeTab: "plan" | "saved" = tabParam === "saved" ? "saved" : "plan";
+
+  const [sortBy, setSortBy] = useState<"duration" | "calories" | "rating">(
+    "duration",
+  );
+
+  const handleTabChange = (tab: "plan" | "saved") => {
+    router.push(`/my-plan?tab=${tab}`, { scroll: false });
+  };
 
   const totalMinutes = plan.reduce(
     (total, workout) => total + (workout.duration || 0),
@@ -21,7 +35,16 @@ const MyPlanPage = () => {
     0,
   );
 
-  const currentList = activeTab === "plan" ? plan : saved;
+  const rawList = activeTab === "plan" ? plan : saved;
+
+  // Sorting Logic
+  const currentList = [...rawList].sort((a, b) => {
+    if (sortBy === "duration") return (b.duration || 0) - (a.duration || 0);
+    if (sortBy === "calories")
+      return (b.caloriesBurned || 0) - (a.caloriesBurned || 0);
+    if (sortBy === "rating") return (b.rating || 0) - (a.rating || 0);
+    return 0;
+  });
 
   return (
     <main className="min-h-screen bg-[#08080a] text-white py-10 sm:py-16">
@@ -46,8 +69,13 @@ const MyPlanPage = () => {
           calories={totalCalories}
         />
 
-        {/* Tabs Component */}
-        <PlanTabs activeTab={activeTab} setActiveTab={setActiveTab} />
+        {/* Tabs & Sort Filter */}
+        <PlanTabs
+          activeTab={activeTab}
+          setActiveTab={handleTabChange}
+          sortBy={sortBy}
+          setSortBy={setSortBy}
+        />
 
         {/* Workout List or Empty State */}
         {currentList.length === 0 ? (
@@ -57,7 +85,9 @@ const MyPlanPage = () => {
             </h2>
 
             <p className="mt-2 max-w-sm text-xs text-zinc-400">
-              Browse the library and add a lift to get today moving.
+              {activeTab === "saved"
+                ? "You haven't saved any workouts yet."
+                : "Browse the library and add a lift to get today moving."}
             </p>
 
             <Link
@@ -81,6 +111,14 @@ const MyPlanPage = () => {
       </div>
     </main>
   );
-};
+}
 
-export default MyPlanPage;
+export default function MyPlanPage() {
+  return (
+    <Suspense
+      fallback={<div className="p-10 text-center text-white">Loading...</div>}
+    >
+      <MyPlanContent />
+    </Suspense>
+  );
+}
