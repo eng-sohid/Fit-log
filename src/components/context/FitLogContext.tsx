@@ -1,6 +1,11 @@
 "use client";
 
-import { createContext, ReactNode, useEffect, useState } from "react";
+import {
+  createContext,
+  ReactNode,
+  useState,
+  useSyncExternalStore,
+} from "react";
 import { Workout } from "../types/workout";
 
 interface FitLogContextType {
@@ -27,67 +32,70 @@ export const FitLogContext = createContext<FitLogContextType>({
   markAsDone: () => {},
 });
 
+// 1. External Store Subscribe Function
+const subscribe = (listener: () => void) => {
+  window.addEventListener("storage", listener);
+  return () => window.removeEventListener("storage", listener);
+};
+
+// 2. LocalStorage Helpers
+const getPlanSnapshot = () => localStorage.getItem("fitlog_plan") || "[]";
+const getSavedSnapshot = () => localStorage.getItem("fitlog_saved") || "[]";
+const getServerSnapshot = () => "[]";
+
 export default function FitLogProvider({ children }: { children: ReactNode }) {
-  // useState-এর ভেতরেই সরাসরি LocalStorage থেকে ডাটা লোড করা হচ্ছে (No Sync Issue)
-  const [plan, setPlan] = useState<Workout[]>(() => {
-    if (typeof window !== "undefined") {
-      try {
-        const savedPlan = localStorage.getItem("fitlog_plan");
-        return savedPlan ? JSON.parse(savedPlan) : [];
-      } catch {
-        return [];
-      }
-    }
-    return [];
-  });
-
-  const [saved, setSaved] = useState<Workout[]>(() => {
-    if (typeof window !== "undefined") {
-      try {
-        const savedSaved = localStorage.getItem("fitlog_saved");
-        return savedSaved ? JSON.parse(savedSaved) : [];
-      } catch {
-        return [];
-      }
-    }
-    return [];
-  });
-
   const [activeTab, setActiveTab] = useState<"plan" | "saved">("plan");
 
-  // ডাটা পরিবর্তন হলে LocalStorage-এ সেভ হবে
-  useEffect(() => {
-    localStorage.setItem("fitlog_plan", JSON.stringify(plan));
-  }, [plan]);
+  // Load from LocalStorage safely without useEffect
+  const rawPlan = useSyncExternalStore(
+    subscribe,
+    getPlanSnapshot,
+    getServerSnapshot,
+  );
+  const rawSaved = useSyncExternalStore(
+    subscribe,
+    getSavedSnapshot,
+    getServerSnapshot,
+  );
 
-  useEffect(() => {
-    localStorage.setItem("fitlog_saved", JSON.stringify(saved));
-  }, [saved]);
+  const [planOverride, setPlanOverride] = useState<Workout[] | null>(null);
+  const [savedOverride, setSavedOverride] = useState<Workout[] | null>(null);
+
+  const plan: Workout[] = planOverride ?? (JSON.parse(rawPlan) as Workout[]);
+  const saved: Workout[] = savedOverride ?? (JSON.parse(rawSaved) as Workout[]);
 
   const addToPlan = (workout: Workout) => {
-    setPlan((prev) => {
-      if (prev.some((item) => item.id === workout.id)) return prev;
-      return [...prev, workout];
-    });
+    const updated = plan.some((item) => item.id === workout.id)
+      ? plan
+      : [...plan, workout];
+    setPlanOverride(updated);
+    localStorage.setItem("fitlog_plan", JSON.stringify(updated));
   };
 
   const saveWorkout = (workout: Workout) => {
-    setSaved((prev) => {
-      if (prev.some((item) => item.id === workout.id)) return prev;
-      return [...prev, workout];
-    });
+    const updated = saved.some((item) => item.id === workout.id)
+      ? saved
+      : [...saved, workout];
+    setSavedOverride(updated);
+    localStorage.setItem("fitlog_saved", JSON.stringify(updated));
   };
 
   const removeFromPlan = (id: number) => {
-    setPlan((prev) => prev.filter((workout) => workout.id !== id));
+    const updated = plan.filter((workout) => workout.id !== id);
+    setPlanOverride(updated);
+    localStorage.setItem("fitlog_plan", JSON.stringify(updated));
   };
 
   const removeFromSaved = (id: number) => {
-    setSaved((prev) => prev.filter((workout) => workout.id !== id));
+    const updated = saved.filter((workout) => workout.id !== id);
+    setSavedOverride(updated);
+    localStorage.setItem("fitlog_saved", JSON.stringify(updated));
   };
 
   const markAsDone = (id: number) => {
-    setPlan((prev) => prev.filter((workout) => workout.id !== id));
+    const updated = plan.filter((workout) => workout.id !== id);
+    setPlanOverride(updated);
+    localStorage.setItem("fitlog_plan", JSON.stringify(updated));
   };
 
   return (
