@@ -9,6 +9,7 @@ interface FitLogContextType {
   addToPlan: (workout: Workout) => void;
   saveWorkout: (workout: Workout) => void;
   removeFromPlan: (id: number) => void;
+  removeFromSaved: (id: number) => void;
   markAsDone: (id: number) => void;
 }
 
@@ -18,6 +19,7 @@ export const FitLogContext = createContext<FitLogContextType>({
   addToPlan: () => {},
   saveWorkout: () => {},
   removeFromPlan: () => {},
+  removeFromSaved: () => {},
   markAsDone: () => {},
 });
 
@@ -42,11 +44,23 @@ const FitLogProvider = ({ children }: FitLogProviderProps) => {
   };
 
   const saveWorkout = (workout: Workout) => {
-    setSaved((prev) => [...prev, workout]);
+    setSaved((prev) => {
+      const alreadyExists = prev.some((item) => item.id === workout.id);
+
+      if (alreadyExists) {
+        return prev;
+      }
+
+      return [...prev, workout];
+    });
   };
 
   const removeFromPlan = (id: number) => {
     setPlan((prev) => prev.filter((workout) => workout.id !== id));
+  };
+
+  const removeFromSaved = (id: number) => {
+    setSaved((prev) => prev.filter((workout) => workout.id !== id));
   };
 
   const markAsDone = (id: number) => {
@@ -61,6 +75,7 @@ const FitLogProvider = ({ children }: FitLogProviderProps) => {
         addToPlan,
         saveWorkout,
         removeFromPlan,
+        removeFromSaved,
         markAsDone,
       }}
     >
