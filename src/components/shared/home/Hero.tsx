@@ -26,7 +26,7 @@ const Hero = () => {
 
               <div className="mt-8">
                 <a
-                  href="#library"
+                  href="/library"
                   className="inline-block rounded-xl bg-[#ccff00] px-7 py-3.5 text-xs font-black uppercase tracking-wider text-black transition-all duration-300 hover:bg-white hover:scale-105"
                 >
                   BROWSE WORKOUTS
