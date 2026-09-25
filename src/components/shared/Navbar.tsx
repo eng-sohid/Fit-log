@@ -13,11 +13,11 @@ const Navbar = () => {
 
   const isWorkoutActive = pathname === "/";
   const isPlanActive = pathname === "/my-plan";
+  const isSavedActive = pathname === "/saved";
 
   return (
     <nav className="sticky top-0 z-50 w-full border-b border-white/5 bg-[#08080a]">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
-        {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
           <Image
             src={logo}
@@ -26,13 +26,13 @@ const Navbar = () => {
             height={24}
             className="h-6 w-auto"
           />
+
           <span className="text-base font-black tracking-wider text-white uppercase">
             FITLOG
           </span>
         </Link>
 
-        {/* Navigation Links - Center Pill Tabs */}
-        <div className="flex items-center gap-1 rounded-full bg-zinc-900/80 p-1 border border-white/5">
+        <div className="flex items-center gap-1 rounded-full border border-white/5 bg-zinc-900/80 p-1">
           <Link
             href="/"
             className={`rounded-full px-4 py-1 text-xs font-bold transition-all duration-200 ${
@@ -45,7 +45,7 @@ const Navbar = () => {
           </Link>
 
           <Link
-            href="/my-plan?tab=plan"
+            href="/my-plan"
             className={`rounded-full px-4 py-1 text-xs font-bold transition-all duration-200 ${
               isPlanActive
                 ? "bg-[#ccff00] text-black"
@@ -56,24 +56,29 @@ const Navbar = () => {
           </Link>
         </div>
 
-        {/* Right Counter Stats */}
         <div className="flex items-center gap-4 text-xs font-medium text-zinc-400">
           <Link
-            href="/my-plan?tab=plan"
-            className="flex items-center gap-1.5 hover:text-white transition"
+            href="/my-plan"
+            className={`flex items-center gap-1.5 transition ${
+              isPlanActive ? "text-white" : "hover:text-white"
+            }`}
           >
             <span>Plan</span>
+
             <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-[#ccff00] px-1.5 text-[11px] font-black text-black">
               {plan.length}
             </span>
           </Link>
 
           <Link
-            href="/my-plan?tab=saved"
-            className="flex items-center gap-1.5 hover:text-white transition"
+            href="/saved"
+            className={`flex items-center gap-1.5 transition ${
+              isSavedActive ? "text-white" : "hover:text-white"
+            }`}
           >
             <span>Saved</span>
-            <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-zinc-800 border border-white/10 px-1.5 text-[11px] font-bold text-white">
+
+            <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full border border-white/10 bg-zinc-800 px-1.5 text-[11px] font-bold text-white">
               {saved.length}
             </span>
           </Link>

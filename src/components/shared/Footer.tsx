@@ -12,7 +12,6 @@ const Footer = () => {
           <span className="text-lg font-black tracking-tight">FITLOG</span>
         </div>
 
-        {/* Copyright */}
         <p className="text-xs text-gray-400 sm:text-sm">
           © 2026 FitLog — Workout Library. Train hard, log honest.
         </p>

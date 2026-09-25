@@ -29,7 +29,6 @@ const WorkoutCard = ({ workout }: WorkoutCardProps) => {
 
   return (
     <article className="group overflow-hidden rounded-2xl border border-white/5 bg-[#12141a] transition duration-300 hover:border-white/20">
-      {/* Image Section with Overlay Pills */}
       <Link
         href={`/workouts/${workout.id}`}
         className="relative block h-48 w-full overflow-hidden"
@@ -42,7 +41,6 @@ const WorkoutCard = ({ workout }: WorkoutCardProps) => {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#12141a] via-transparent to-transparent opacity-80" />
 
-        {/* Muscle Groups - Floating Neon Pills */}
         <div className="absolute left-3 top-3 flex flex-wrap gap-1.5">
           {workout.muscleGroups.map((muscle) => (
             <span

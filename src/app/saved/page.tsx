@@ -3,28 +3,17 @@
 import Link from "next/link";
 import { useContext, useState } from "react";
 import { FitLogContext } from "@/src/components/context/FitLogContext";
-import PlanStats from "@/src/components/shared/my-plan/PlanStats";
 import PlanTabs from "@/src/components/shared/my-plan/PlanTabs";
 import PlanCard from "@/src/components/shared/my-plan/PlanCard";
 
-const MyPlanPage = () => {
-  const { plan = [] } = useContext(FitLogContext);
+const SavedPage = () => {
+  const { saved = [] } = useContext(FitLogContext);
 
   const [sortBy, setSortBy] = useState<"duration" | "calories" | "rating">(
     "duration",
   );
 
-  const totalMinutes = plan.reduce(
-    (total, workout) => total + (workout.duration || 0),
-    0,
-  );
-
-  const totalCalories = plan.reduce(
-    (total, workout) => total + (workout.caloriesBurned || 0),
-    0,
-  );
-
-  const currentList = [...plan].sort((a, b) => {
+  const currentList = [...saved].sort((a, b) => {
     if (sortBy === "duration") {
       return (b.duration || 0) - (a.duration || 0);
     }
@@ -50,23 +39,18 @@ const MyPlanPage = () => {
           </p>
 
           <h1 className="mt-1 text-3xl font-black tracking-tight text-white uppercase sm:text-4xl">
-            MY PLAN
+            SAVED
           </h1>
 
           <p className="mt-1 text-sm text-zinc-400">
-            Cap of five lifts for today. Finish them, then load more.
+            Your saved workouts are here.
           </p>
         </div>
 
-        <PlanStats
-          exercises={plan.length}
-          minutes={totalMinutes}
-          calories={totalCalories}
-        />
+        {/* Tabs */}
+        <PlanTabs activeTab="saved" sortBy={sortBy} setSortBy={setSortBy} />
 
-        <PlanTabs activeTab="plan" sortBy={sortBy} setSortBy={setSortBy} />
-
-        {/* Workout List */}
+        {/* Saved Workouts */}
         {currentList.length === 0 ? (
           <div className="mt-8 flex flex-col items-center justify-center rounded-3xl border border-dashed border-white/10 bg-[#12141a]/50 px-6 py-20 text-center">
             <h2 className="text-xl font-black tracking-wider text-white uppercase">
@@ -74,7 +58,7 @@ const MyPlanPage = () => {
             </h2>
 
             <p className="mt-2 max-w-sm text-xs text-zinc-400">
-              Browse the library and add a lift to get today moving.
+              You haven&apos;t saved any workouts yet.
             </p>
 
             <Link
@@ -87,7 +71,7 @@ const MyPlanPage = () => {
         ) : (
           <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {currentList.map((workout) => (
-              <PlanCard key={workout.id} workout={workout} isSaved={false} />
+              <PlanCard key={workout.id} workout={workout} isSaved={true} />
             ))}
           </div>
         )}
@@ -96,4 +80,4 @@ const MyPlanPage = () => {
   );
 };
 
-export default MyPlanPage;
+export default SavedPage;
