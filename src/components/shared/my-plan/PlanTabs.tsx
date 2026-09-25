@@ -37,7 +37,6 @@ const PlanTabs = ({ activeTab, sortBy, setSortBy }: PlanTabsProps) => {
         </Link>
       </div>
 
-      {/* Sort */}
       <div className="flex items-center gap-2 text-xs text-zinc-400">
         <span className="font-medium">Sort By</span>
 
