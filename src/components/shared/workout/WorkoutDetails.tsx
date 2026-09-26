@@ -94,7 +94,6 @@ const WorkoutDetails = ({ workout }: WorkoutDetailsProps) => {
             </div>
           </div>
 
-          {/* Instructions */}
           <div className="mt-6 sm:mt-8">
             <h3 className="text-xs font-black uppercase tracking-wider text-white">
               INSTRUCTIONS

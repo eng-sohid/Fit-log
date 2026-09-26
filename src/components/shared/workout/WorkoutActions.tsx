@@ -24,7 +24,7 @@ export default function WorkoutActions({ workout }: WorkoutActionsProps) {
     e.stopPropagation();
 
     if (isPlanned) {
-      toast.error("Already added to today's plan!");
+      toast.info("Already added to today's plan!");
       return;
     }
     if (plan.length >= 5) {
@@ -40,7 +40,7 @@ export default function WorkoutActions({ workout }: WorkoutActionsProps) {
     e.stopPropagation();
 
     if (isSaved) {
-      toast.error("Already saved for later!");
+      toast.info("Already saved for later!");
       return;
     }
 
@@ -53,11 +53,7 @@ export default function WorkoutActions({ workout }: WorkoutActionsProps) {
       <button
         onClick={handleAddToPlan}
         type="button"
-        className={`flex w-full items-center justify-center gap-2 rounded-xl px-5 py-3.5 text-xs font-black uppercase tracking-wider transition-all ${
-          isPlanned || plan.length >= 5
-            ? "bg-zinc-800 text-zinc-500 cursor-not-allowed"
-            : "bg-[#ccff00] text-black hover:bg-white active:scale-95"
-        }`}
+        className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#ccff00] px-5 py-3.5 text-xs font-black uppercase tracking-wider text-black transition-all hover:bg-white active:scale-95"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -73,21 +69,13 @@ export default function WorkoutActions({ workout }: WorkoutActionsProps) {
             d="M12 4v16m8-8H4"
           />
         </svg>
-        {isPlanned
-          ? "Added to Plan"
-          : plan.length >= 5
-            ? "Plan Limit Reached (Max 5)"
-            : "Add to today's plan"}
+        {isPlanned ? "Added to Plan" : "Add to today's plan"}
       </button>
 
       <button
         onClick={handleSaveWorkout}
         type="button"
-        className={`flex w-full items-center justify-center gap-2 rounded-xl border px-5 py-3.5 text-xs font-black uppercase tracking-wider transition-all ${
-          isSaved
-            ? "border-zinc-800 bg-zinc-900/50 text-zinc-500 cursor-not-allowed"
-            : "border-white/10 bg-zinc-900 text-white hover:border-white/20 active:scale-95"
-        }`}
+        className="flex w-full items-center justify-center gap-2 rounded-xl border border-white/10 bg-zinc-900 px-5 py-3.5 text-xs font-black uppercase tracking-wider text-white transition-all hover:border-white/20 active:scale-95"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"

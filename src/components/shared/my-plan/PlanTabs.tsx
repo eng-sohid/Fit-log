@@ -1,21 +1,27 @@
 "use client";
 
-import Link from "next/link";
 import { ChevronDown } from "lucide-react";
 
 interface PlanTabsProps {
   activeTab: "plan" | "saved";
+  setActiveTab: (tab: "plan" | "saved") => void;
   sortBy: "duration" | "calories" | "rating";
   setSortBy: (sort: "duration" | "calories" | "rating") => void;
 }
 
-const PlanTabs = ({ activeTab, sortBy, setSortBy }: PlanTabsProps) => {
+const PlanTabs = ({
+  activeTab,
+  setActiveTab,
+  sortBy,
+  setSortBy,
+}: PlanTabsProps) => {
   return (
     <div className="mt-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
       {/* Tabs */}
       <div className="inline-flex rounded-xl border border-white/5 bg-[#12141a] p-1.5">
-        <Link
-          href="/my-plan"
+        <button
+          type="button"
+          onClick={() => setActiveTab("plan")}
           className={`rounded-lg px-5 py-2 text-xs font-black tracking-wider uppercase transition-all ${
             activeTab === "plan"
               ? "bg-[#1f232d] text-white shadow-sm"
@@ -23,10 +29,11 @@ const PlanTabs = ({ activeTab, sortBy, setSortBy }: PlanTabsProps) => {
           }`}
         >
           Today&apos;s Plan
-        </Link>
+        </button>
 
-        <Link
-          href="/saved"
+        <button
+          type="button"
+          onClick={() => setActiveTab("saved")}
           className={`rounded-lg px-5 py-2 text-xs font-black tracking-wider uppercase transition-all ${
             activeTab === "saved"
               ? "bg-[#1f232d] text-white shadow-sm"
@@ -34,7 +41,7 @@ const PlanTabs = ({ activeTab, sortBy, setSortBy }: PlanTabsProps) => {
           }`}
         >
           Saved
-        </Link>
+        </button>
       </div>
 
       <div className="flex items-center gap-2 text-xs text-zinc-400">

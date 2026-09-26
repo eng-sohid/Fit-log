@@ -2,10 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useContext } from "react";
-import { toast } from "react-toastify";
 import { Workout } from "../../types/workout";
-import { FitLogContext } from "../../context/FitLogContext";
 import { Clock, Flame, Star } from "lucide-react";
 
 interface WorkoutCardProps {
@@ -13,20 +10,6 @@ interface WorkoutCardProps {
 }
 
 const WorkoutCard = ({ workout }: WorkoutCardProps) => {
-  const { plan = [], addToPlan } = useContext(FitLogContext);
-
-  const isAdded = plan.some((item) => item.id === workout.id);
-
-  const handleAddToPlan = () => {
-    if (isAdded) {
-      toast.info("Already added to today's plan");
-      return;
-    }
-
-    addToPlan(workout);
-    toast.success("Added to today's plan");
-  };
-
   return (
     <article className="group overflow-hidden rounded-2xl border border-white/5 bg-[#12141a] transition duration-300 hover:border-white/20">
       <Link
@@ -53,8 +36,7 @@ const WorkoutCard = ({ workout }: WorkoutCardProps) => {
         </div>
       </Link>
 
-      {/* Card Body Content */}
-      <div className="p-4 pt-1">
+      <div className="p-4 pt-1 pb-5">
         {/* Title */}
         <Link href={`/workouts/${workout.id}`}>
           <h2 className="text-base font-black tracking-tight text-white uppercase transition hover:text-[#ccff00]">
@@ -62,7 +44,6 @@ const WorkoutCard = ({ workout }: WorkoutCardProps) => {
           </h2>
         </Link>
 
-        {/* Equipment */}
         <p className="mt-0.5 text-xs text-zinc-500">{workout.equipment}</p>
 
         {/* Inline Metrics Info */}
@@ -82,18 +63,6 @@ const WorkoutCard = ({ workout }: WorkoutCardProps) => {
             <span className="font-bold text-white">{workout.rating}</span>
           </div>
         </div>
-
-        {/* Action Button */}
-        <button
-          onClick={handleAddToPlan}
-          className={`mt-4 w-full rounded-xl py-2.5 text-xs font-black uppercase tracking-wide transition-all ${
-            isAdded
-              ? "cursor-default bg-zinc-800 text-zinc-500"
-              : "bg-[#ccff00] text-black hover:bg-white hover:scale-[1.02]"
-          }`}
-        >
-          {isAdded ? "✓ Added to Plan" : "Add to Today's Plan"}
-        </button>
       </div>
     </article>
   );

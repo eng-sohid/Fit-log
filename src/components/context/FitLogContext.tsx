@@ -32,13 +32,11 @@ export const FitLogContext = createContext<FitLogContextType>({
   markAsDone: () => {},
 });
 
-// 1. External Store Subscribe Function
 const subscribe = (listener: () => void) => {
   window.addEventListener("storage", listener);
   return () => window.removeEventListener("storage", listener);
 };
 
-// 2. LocalStorage Helpers
 const getPlanSnapshot = () => localStorage.getItem("fitlog_plan") || "[]";
 const getSavedSnapshot = () => localStorage.getItem("fitlog_saved") || "[]";
 const getServerSnapshot = () => "[]";
@@ -46,7 +44,6 @@ const getServerSnapshot = () => "[]";
 export default function FitLogProvider({ children }: { children: ReactNode }) {
   const [activeTab, setActiveTab] = useState<"plan" | "saved">("plan");
 
-  // Load from LocalStorage safely without useEffect
   const rawPlan = useSyncExternalStore(
     subscribe,
     getPlanSnapshot,
@@ -93,7 +90,9 @@ export default function FitLogProvider({ children }: { children: ReactNode }) {
   };
 
   const markAsDone = (id: number) => {
-    const updated = plan.filter((workout) => workout.id !== id);
+    const updated = plan.map((workout) =>
+      workout.id === id ? { ...workout, completed: true } : workout,
+    );
     setPlanOverride(updated);
     localStorage.setItem("fitlog_plan", JSON.stringify(updated));
   };

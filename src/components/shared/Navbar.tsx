@@ -14,8 +14,9 @@ const Navbar = () => {
   const [open, setOpen] = useState(false);
 
   const isWorkoutActive = pathname === "/";
-  const isPlanActive = pathname === "/my-plan";
-  const isSavedActive = pathname === "/saved";
+  const isPlanActive = pathname === "/my-plan/plan";
+  const isSavedActive = pathname === "/my-plan/saved";
+  const isMyPlanSection = isPlanActive || isSavedActive;
 
   const linkClass = (active: boolean) =>
     `rounded-full px-4 py-1 text-xs font-bold transition-all duration-200 ${
@@ -26,7 +27,11 @@ const Navbar = () => {
     <nav className="sticky top-0 z-50 w-full border-b border-white/5 bg-[#08080a]">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2">
+        <Link
+          href="/"
+          className="flex items-center gap-2"
+          onClick={() => setOpen(false)}
+        >
           <Image
             src={logo}
             alt="FITLOG Logo"
@@ -44,7 +49,7 @@ const Navbar = () => {
           <Link href="/" className={linkClass(isWorkoutActive)}>
             Workouts
           </Link>
-          <Link href="/my-plan" className={linkClass(isPlanActive)}>
+          <Link href="/my-plan/plan" className={linkClass(isMyPlanSection)}>
             My Plan
           </Link>
         </div>
@@ -52,7 +57,7 @@ const Navbar = () => {
         {/* Desktop: Plan / Saved */}
         <div className="hidden items-center gap-4 text-xs font-medium text-zinc-400 md:flex">
           <Link
-            href="/my-plan"
+            href="/my-plan/plan"
             className={`flex items-center gap-1.5 transition ${
               isPlanActive ? "text-white" : "hover:text-white"
             }`}
@@ -64,7 +69,7 @@ const Navbar = () => {
           </Link>
 
           <Link
-            href="/saved"
+            href="/my-plan/saved"
             className={`flex items-center gap-1.5 transition ${
               isSavedActive ? "text-white" : "hover:text-white"
             }`}
@@ -76,19 +81,40 @@ const Navbar = () => {
           </Link>
         </div>
 
-        {/* Mobile: compact icons + hamburger */}
-        <div className="flex items-center gap-3 md:hidden">
-          <Link href="/my-plan" className="relative text-zinc-300">
-            <span className="text-[11px]">Plan</span>
-            <span className="absolute -right-3 -top-2 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-[#ccff00] px-1 text-[9px] font-black text-black">
+        {/* Mobile: Plan/Saved badges + hamburger */}
+        <div className="flex items-center gap-2 md:hidden">
+          <Link
+            href="/my-plan/plan"
+            className={`flex items-center gap-1 rounded-full border px-2.5 py-1 text-[11px] font-bold transition ${
+              isPlanActive
+                ? "border-[#ccff00]/40 bg-[#ccff00]/10 text-[#ccff00]"
+                : "border-white/10 bg-zinc-900 text-zinc-300"
+            }`}
+          >
+            Plan
+            <span className="flex h-4 min-w-[16px] items-center justify-center rounded-full bg-[#ccff00] px-1 text-[9px] font-black text-black">
               {plan.length}
+            </span>
+          </Link>
+
+          <Link
+            href="/my-plan/saved"
+            className={`flex items-center gap-1 rounded-full border px-2.5 py-1 text-[11px] font-bold transition ${
+              isSavedActive
+                ? "border-white/30 bg-white/10 text-white"
+                : "border-white/10 bg-zinc-900 text-zinc-300"
+            }`}
+          >
+            Saved
+            <span className="flex h-4 min-w-[16px] items-center justify-center rounded-full border border-white/10 bg-zinc-800 px-1 text-[9px] font-bold text-white">
+              {saved.length}
             </span>
           </Link>
 
           <button
             onClick={() => setOpen(!open)}
             aria-label="Toggle menu"
-            className="rounded-full border border-white/10 bg-zinc-900 p-1.5 text-white"
+            className="rounded-full border border-white/10 bg-zinc-900 p-1.5 text-white transition hover:border-white/20"
           >
             {open ? <X size={18} /> : <Menu size={18} />}
           </button>
@@ -96,40 +122,37 @@ const Navbar = () => {
       </div>
 
       {/* Mobile dropdown */}
-      {open && (
-        <div className="flex flex-col gap-1 border-t border-white/5 bg-[#08080a] px-4 py-3 md:hidden">
+      <div
+        className={`overflow-hidden transition-all duration-300 ease-in-out md:hidden ${
+          open ? "max-h-40 border-t border-white/5" : "max-h-0"
+        }`}
+      >
+        <div className="flex flex-col gap-1.5 bg-[#08080a] px-4 py-3">
           <Link
             href="/"
             onClick={() => setOpen(false)}
-            className={`rounded-lg px-3 py-2 text-sm font-bold ${
-              isWorkoutActive ? "bg-[#ccff00] text-black" : "text-zinc-300"
+            className={`rounded-lg px-3 py-2 text-sm font-bold transition ${
+              isWorkoutActive
+                ? "bg-[#ccff00] text-black"
+                : "text-zinc-300 hover:bg-white/5"
             }`}
           >
             Workouts
           </Link>
+
           <Link
-            href="/my-plan"
+            href="/my-plan/plan"
             onClick={() => setOpen(false)}
-            className={`rounded-lg px-3 py-2 text-sm font-bold ${
-              isPlanActive ? "bg-[#ccff00] text-black" : "text-zinc-300"
+            className={`rounded-lg px-3 py-2 text-sm font-bold transition ${
+              isMyPlanSection
+                ? "bg-[#ccff00] text-black"
+                : "text-zinc-300 hover:bg-white/5"
             }`}
           >
             My Plan
           </Link>
-          <Link
-            href="/saved"
-            onClick={() => setOpen(false)}
-            className={`flex items-center justify-between rounded-lg px-3 py-2 text-sm font-bold ${
-              isSavedActive ? "text-white" : "text-zinc-300"
-            }`}
-          >
-            <span>Saved</span>
-            <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full border border-white/10 bg-zinc-800 px-1.5 text-[11px] font-bold text-white">
-              {saved.length}
-            </span>
-          </Link>
         </div>
-      )}
+      </div>
     </nav>
   );
 };
